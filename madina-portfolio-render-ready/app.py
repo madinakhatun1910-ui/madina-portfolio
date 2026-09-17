@@ -2,23 +2,37 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, a
 from pathlib import Path
 import json
 import sqlite3
-import re
-import smtplib
+import os
+import html
+import resend
+
 from config import Config
-from email.message import EmailMessage
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
+
+# =========================================================
+# PATHS
+# =========================================================
+
 BASE = Path(__file__).resolve().parent
+
 PRODUCTS_FILE = BASE / "data" / "products.json"
 BLOGS_FILE = BASE / "data" / "blogs.json"
 DB_FILE = BASE / "database" / "app.db"
 
 
+# =========================================================
+# JSON HELPERS
+# =========================================================
+
 def load_json(path, key):
     try:
-        return json.loads(path.read_text(encoding="utf-8")).get(key, [])
+        return json.loads(
+            path.read_text(encoding="utf-8")
+        ).get(key, [])
     except (OSError, json.JSONDecodeError):
         return []
 
@@ -31,72 +45,14 @@ def posts():
     return load_json(BLOGS_FILE, "posts")
 
 
+# =========================================================
+# DATABASE
+# =========================================================
+
 def get_db():
     conn = sqlite3.connect(DB_FILE)
     conn.row_factory = sqlite3.Row
     return conn
-
-
-def send_enquiry_email(name, phone, email, product, message):
-    """Send a contact-form notification email when SMTP is configured."""
-
-    recipient = app.config.get("NOTIFICATION_EMAIL", "").strip()
-    username = app.config.get("SMTP_USERNAME", "").strip()
-    password = app.config.get("SMTP_PASSWORD", "")
-
-    if not recipient or not username or not password:
-        app.logger.warning(
-            "Email notification skipped: SMTP notification settings are not configured"
-        )
-        return False
-
-    sender = app.config.get("SMTP_FROM", "").strip() or username
-
-    subject = f"New Portfolio Enquiry - {name}"
-
-    body = (
-        "A new enquiry was submitted on the Madina portfolio website.\n\n"
-        f"Name: {name}\n"
-        f"Phone: {phone}\n"
-        f"Email: {email or 'Not provided'}\n"
-        f"Product: {product or 'Not specified'}\n\n"
-        f"Message:\n{message}\n"
-    )
-
-    msg = EmailMessage()
-    msg["Subject"] = subject
-    msg["From"] = sender
-    msg["To"] = recipient
-
-    if email:
-        msg["Reply-To"] = email
-
-    msg.set_content(body)
-
-    try:
-        with smtplib.SMTP(
-            app.config.get("SMTP_HOST", "smtp.gmail.com"),
-            app.config.get("SMTP_PORT", 587),
-            timeout=15
-        ) as smtp:
-
-            smtp.starttls()
-            smtp.login(username, password)
-            smtp.send_message(msg)
-
-            app.logger.info(
-                "EMAIL SENT SUCCESSFULLY to %s",
-                recipient
-            )
-
-        return True
-
-    except (OSError, smtplib.SMTPException) as exc:
-        app.logger.exception(
-            "Could not send enquiry notification email: %s",
-            exc
-        )
-        return False
 
 
 def init_db():
@@ -125,6 +81,111 @@ def init_db():
 init_db()
 
 
+# =========================================================
+# RESEND EMAIL NOTIFICATION
+# =========================================================
+
+def send_enquiry_email(name, phone, email, product, message):
+    """
+    Send contact form notification using Resend API.
+    """
+
+    api_key = os.getenv("RESEND_API_KEY", "").strip()
+
+    recipient = os.getenv(
+        "MADINA_NOTIFICATION_EMAIL",
+        "madinakhatun1910@gmail.com"
+    ).strip()
+
+    if not api_key:
+        app.logger.warning(
+            "Email notification skipped: RESEND_API_KEY is not configured"
+        )
+        return False
+
+    if not recipient:
+        app.logger.warning(
+            "Email notification skipped: notification email is not configured"
+        )
+        return False
+
+    try:
+        # Set Resend API key
+        resend.api_key = api_key
+
+        # Escape user-submitted data before putting it into HTML
+        safe_name = html.escape(name)
+        safe_phone = html.escape(phone)
+        safe_email = html.escape(email or "Not provided")
+        safe_product = html.escape(product or "Not specified")
+        safe_message = html.escape(message).replace("\n", "<br>")
+
+        params = {
+            "from": "onboarding@resend.dev",
+            "to": [recipient],
+            "subject": f"New Portfolio Enquiry - {name}",
+            "html": f"""
+                <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                    <h2>New Portfolio Enquiry</h2>
+
+                    <p>
+                        <strong>Name:</strong>
+                        {safe_name}
+                    </p>
+
+                    <p>
+                        <strong>Phone:</strong>
+                        {safe_phone}
+                    </p>
+
+                    <p>
+                        <strong>Email:</strong>
+                        {safe_email}
+                    </p>
+
+                    <p>
+                        <strong>Product:</strong>
+                        {safe_product}
+                    </p>
+
+                    <h3>Message</h3>
+
+                    <p>
+                        {safe_message}
+                    </p>
+
+                    <hr>
+
+                    <p>
+                        Sent from Madina Khatoon Portfolio Website.
+                    </p>
+                </div>
+            """
+        }
+
+        result = resend.Emails.send(params)
+
+        app.logger.info(
+            "RESEND EMAIL SENT SUCCESSFULLY to %s: %s",
+            recipient,
+            result
+        )
+
+        return True
+
+    except Exception as exc:
+        app.logger.exception(
+            "Could not send enquiry notification email via Resend: %s",
+            exc
+        )
+
+        return False
+
+
+# =========================================================
+# GLOBAL SITE DATA
+# =========================================================
+
 @app.context_processor
 def inject_globals():
     return {
@@ -140,8 +201,13 @@ def inject_globals():
     }
 
 
+# =========================================================
+# HOME
+# =========================================================
+
 @app.route("/")
 def index():
+
     faqs = [
         (
             "Who is Madina Khatoon?",
@@ -222,17 +288,29 @@ def index():
     )
 
 
+# =========================================================
+# ABOUT
+# =========================================================
+
 @app.route("/about")
 def about():
     return render_template("about.html")
 
 
+# =========================================================
+# PRODUCTS
+# =========================================================
+
 @app.route("/products")
 def product_list():
+
     items = products()
-    categories = sorted(
-        {p.get("category") for p in items if p.get("category")}
-    )
+
+    categories = sorted({
+        p.get("category")
+        for p in items
+        if p.get("category")
+    })
 
     return render_template(
         "products.html",
@@ -243,8 +321,12 @@ def product_list():
 
 @app.route("/products/<slug>")
 def product_detail(slug):
+
     item = next(
-        (p for p in products() if p.get("id") == slug),
+        (
+            p for p in products()
+            if p.get("id") == slug
+        ),
         None
     )
 
@@ -257,26 +339,45 @@ def product_detail(slug):
     )
 
 
+# =========================================================
+# WELLNESS
+# =========================================================
+
 @app.route("/wellness")
 def wellness():
     return render_template("wellness.html")
 
 
+# =========================================================
+# BLOG
+# =========================================================
+
 @app.route("/blog")
 def blog():
+
+    blog_posts = posts()
+
+    categories = sorted({
+        p["category"]
+        for p in blog_posts
+        if p.get("category")
+    })
+
     return render_template(
         "blog.html",
-        posts=posts(),
-        categories=sorted(
-            {p["category"] for p in posts() if p.get("category")}
-        )
+        posts=blog_posts,
+        categories=categories
     )
 
 
 @app.route("/blog/<slug>")
 def blog_detail(slug):
+
     post = next(
-        (p for p in posts() if p.get("slug") == slug),
+        (
+            p for p in posts()
+            if p.get("slug") == slug
+        ),
         None
     )
 
@@ -296,10 +397,18 @@ def blog_detail(slug):
     )
 
 
+# =========================================================
+# FAQ
+# =========================================================
+
 @app.route("/faq")
 def faq():
     return render_template("faq.html")
 
+
+# =========================================================
+# CONTACT
+# =========================================================
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
@@ -312,12 +421,14 @@ def contact():
         product = request.form.get("product", "").strip()
         message = request.form.get("message", "").strip()
 
+        # Required fields
         if not name or not phone or not message:
             return render_template(
                 "contact.html",
                 error="Please complete your name, phone and message."
             )
 
+        # Length validation
         if (
             len(name) > 120
             or len(phone) > 40
@@ -330,7 +441,9 @@ def contact():
                 error="Please keep the submitted information within the allowed length."
             )
 
+        # Save enquiry in database
         try:
+
             init_db()
 
             conn = get_db()
@@ -361,9 +474,13 @@ def contact():
 
             return render_template(
                 "contact.html",
-                error="We could not save your enquiry right now. Please try again or contact Madina on WhatsApp."
+                error=(
+                    "We could not save your enquiry right now. "
+                    "Please try again or contact Madina on WhatsApp."
+                )
             )
 
+        # Send email notification
         send_enquiry_email(
             name,
             phone,
@@ -374,21 +491,36 @@ def contact():
 
         return render_template(
             "contact.html",
-            success="Thank you! Your enquiry has been received. Madina will contact you soon."
+            success=(
+                "Thank you! Your enquiry has been received. "
+                "Madina will contact you soon."
+            )
         )
 
     return render_template("contact.html")
 
+
+# =========================================================
+# DISCLAIMER
+# =========================================================
 
 @app.route("/disclaimer")
 def disclaimer():
     return render_template("disclaimer.html")
 
 
+# =========================================================
+# PRIVACY
+# =========================================================
+
 @app.route("/privacy")
 def privacy():
     return render_template("privacy.html")
 
+
+# =========================================================
+# SITEMAP
+# =========================================================
 
 @app.route("/sitemap.xml")
 def sitemap():
@@ -441,25 +573,41 @@ def sitemap():
     )
 
 
+# =========================================================
+# ROBOTS.TXT
+# =========================================================
+
 @app.route("/robots.txt")
 def robots():
+
     return (
         "User-agent: *\n"
         "Allow: /\n"
         "Sitemap: /sitemap.xml\n",
         200,
-        {"Content-Type": "text/plain"}
+        {
+            "Content-Type": "text/plain"
+        }
     )
 
 
+# =========================================================
+# 404 ERROR
+# =========================================================
+
 @app.errorhandler(404)
 def not_found(e):
+
     return render_template(
         "base.html",
         title="Page Not Found",
         error_page=True
     ), 404
 
+
+# =========================================================
+# LOCAL RUN
+# =========================================================
 
 if __name__ == "__main__":
     app.run(debug=True)
