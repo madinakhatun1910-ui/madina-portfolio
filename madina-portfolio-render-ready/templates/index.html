@@ -1,0 +1,94 @@
+{% extends "base.html" %}{% block content %}
+
+<section class="hero" id="home">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7 reveal">
+        <span class="eyebrow"><span data-i18n="home.eyebrow">Personal Nutrition · Wellness · Guidance</span></span>
+        <h1>Hi, I'm <em>Madina Khatoon</em></h1>
+        <p class="hero-sub"><span data-i18n="home.role">Herbalife Independent Associate <span>·</span> Nutrition & Wellness Guidance</span></p>
+        <p class="lead-copy"><span data-i18n="home.lead">I help people understand everyday nutrition, wellness habits and product information through simple, personal guidance — with online support across India.</span></p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <a class="btn btn-dark-green btn-lg" href="#expertise"><span data-i18n="home.explore">Explore My Work</span></a>
+          <a class="btn btn-outline-green btn-lg" href="#contact"><span data-i18n="home.contact">Contact Me</span></a>
+        </div>
+        <div class="hero-meta"><span><span data-i18n="home.location_short">Siwan, Bihar</span></span><span><span data-i18n="home.experience">1 Year Experience</span></span><span data-i18n="home.online">Online Across India</span></div>
+      </div>
+      <div class="col-lg-5 reveal">
+        <div class="portrait-card">
+          {% if site.portrait_image %}<img class="portrait-photo" src="{{ url_for('static', filename=site.portrait_image.replace('static/','')) }}" alt="Madina Khatoon" loading="eager">{% else %}<div class="portrait-placeholder"><span>MK</span></div>{% endif %}
+          <div class="portrait-caption"><strong>Madina Khatoon</strong><small>Personal Nutrition & Wellness Guidance</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-pad" id="about">
+<div class="container">
+  <div class="section-heading reveal"><span class="eyebrow"><span data-i18n="home.about_eyebrow">01 · About Me</span></span><h2><span data-i18n="home.about_title_prefix">A personal approach to</span> <em data-i18n="home.about_title_em">wellness.</em></h2><p><span data-i18n="home.about_text">My work is centered on listening to questions, explaining information clearly, and helping people build practical awareness around nutrition and wellness.</span></p></div>
+  <div class="row g-4 align-items-stretch">
+    <div class="col-lg-7 reveal"><div class="about-panel"><p class="quote-line"><span data-i18n="home.quote">“Simple information can make everyday wellness conversations easier.”</span></p><p><span data-i18n="home.about_para">As a Herbalife Independent Associate, I focus on personal guidance and product knowledge. The goal is not to make medical promises, but to help people understand the information available to them and make informed everyday choices.</span></p><a class="text-link" href="#contact"><span data-i18n="home.start">Start a conversation →</span></a></div></div>
+    <div class="col-lg-5 reveal"><div class="info-grid about-facts"><div><strong data-i18n="home.profession">Profession</strong><span>Herbalife Independent Associate</span></div><div><strong data-i18n="home.focus">Focus</strong><span>Nutrition & Wellness Guidance</span></div><div><strong data-i18n="about.experience">Experience</strong><span>1 Year</span></div><div><strong data-i18n="home.location">Location</strong><span>Siwan, Bihar, India</span></div><div><strong data-i18n="home.service">Service</strong><span>Online Guidance Across India</span></div></div></div>
+  </div>
+</div>
+</section>
+
+<section class="section-soft section-pad" id="expertise">
+<div class="container">
+  <div class="section-heading reveal"><span class="eyebrow"><span data-i18n="home.expertise_eyebrow">02 · My Expertise</span></span><h2><span data-i18n="home.expertise_title_prefix">Guidance that keeps things</span> <em data-i18n="home.expertise_title_em">clear.</em></h2><p><span data-i18n="home.expertise_text">Informational, realistic and personal — without medical diagnosis or treatment claims.</span></p></div>
+  <div class="row g-4">
+    {% for item in [("Nutrition Guidance","Simple, practical conversations around everyday nutrition.","nutrition"),("Wellness Education","Clear educational information without medical diagnosis or treatment claims.","wellness"),("Product Knowledge","Product information explained from the supplied product documentation.","product"),("Healthy Lifestyle","Everyday habits around food, movement, hydration and rest.","lifestyle"),("Personalized Guidance","Conversations shaped around the questions and context you share.","personalized"),("Online Support","Guidance available remotely for people across India.","online")] %}
+    <div class="col-md-6 col-lg-4 reveal"><div class="feature-card"><div class="icon-dot">{{ loop.index }}</div><h3 data-i18n="expertise.{{ item[2] }}.title">{{ item[0] }}</h3><p data-i18n="expertise.{{ item[2] }}.text">{{ item[1] }}</p></div></div>
+    {% endfor %}
+  </div>
+</div>
+</section>
+
+<section class="section-pad" id="products">
+<div class="container">
+  <div class="section-heading reveal"><span class="eyebrow"><span data-i18n="home.products_eyebrow">03 · Herbalife Products</span></span><h2><span data-i18n="home.products_title_prefix">Product information, not a</span> <em data-i18n="home.products_title_em">shop.</em></h2><p><span data-i18n="home.products_text">Explore available product information, specifications and FAQs. Products are presented for information and guidance only — there is no pricing, checkout or purchase functionality.</span></p></div>
+  <div class="row g-4">{% for p in featured_products %}<div class="col-md-6 col-lg-4 reveal">{% include "_product_card.html" %}</div>{% endfor %}</div>
+  <div class="text-center mt-5"><a href="{{ url_for('product_list') }}" class="btn btn-outline-green"><span data-i18n="home.view_all">View All Product Information</span></a></div>
+</div>
+</section>
+
+<section class="section-soft section-pad" id="wellness">
+<div class="container">
+  <div class="section-heading reveal"><span class="eyebrow"><span data-i18n="home.wellness_eyebrow">04 · Wellness Guide</span></span><h2><span data-i18n="home.wellness_title_prefix">Learn the basics,</span> <em data-i18n="home.wellness_title_em">at your pace.</em></h2><p><span data-i18n="home.wellness_text">General educational topics designed to make wellness information easier to understand. This section is not medical advice.</span></p></div>
+  <div class="row g-4">{% for num,title,text in wellness_topics %}<div class="col-sm-6 col-lg-3 reveal"><div class="guide-card"><div class="guide-number">{{ num }}</div><h3 data-i18n="wellness_topic.{{ loop.index }}.title">{{ title }}</h3><p data-i18n="wellness_topic.{{ loop.index }}.text">{{ text }}</p></div></div>{% endfor %}</div>
+</div>
+</section>
+
+<section class="section-pad" id="blog">
+<div class="container">
+  <div class="section-heading reveal"><span class="eyebrow"><span data-i18n="home.blog_eyebrow">05 · Knowledge Hub</span></span><h2><span data-i18n="home.blog_title_prefix">Wellness ideas in</span> <em data-i18n="home.blog_title_em">plain language.</em></h2><p><span data-i18n="home.blog_text">Educational articles that focus on understanding nutrition and healthy lifestyle topics rather than aggressive product promotion.</span></p></div>
+  <div class="row g-4">{% for p in featured_posts %}<div class="col-md-6 col-lg-4 reveal"><a class="article-card" href="{{ url_for('blog_detail', slug=p.slug) }}"><span data-i18n="blogpost.{{ p.id }}.category">{{ p.category }}</span><h3 data-i18n="blogpost.{{ p.id }}.title">{{ p.title }}</h3><p data-i18n="blogpost.{{ p.id }}.excerpt">{{ p.excerpt }}</p><small><span data-i18n="blogpost.{{ p.id }}.date">{{ p.date }}</span> · {{ (p.content.split()|length // 200) + 1 }} <span data-i18n="common.min_read">min read</span></small></a></div>{% endfor %}</div>
+  <div class="text-center mt-5"><a href="{{ url_for('blog') }}" class="btn btn-outline-green"><span data-i18n="home.explore_articles">Explore All Articles</span></a></div>
+</div>
+</section>
+
+<section class="section-soft section-pad" id="faq">
+<div class="container">
+  <div class="section-heading reveal"><span class="eyebrow"><span data-i18n="home.faq_eyebrow">06 · FAQ</span></span><h2><span data-i18n="home.faq_title_prefix">Questions, answered</span> <em data-i18n="home.faq_title_em">simply.</em></h2></div>
+  <div class="accordion mx-auto reveal" id="homeFaq" style="max-width:900px">{% for q,a in faqs %}<div class="accordion-item"><h3 class="accordion-header"><button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ loop.index }}" data-i18n="home.faq.{{ loop.index }}.q">{{ q }}</button></h3><div id="faq{{ loop.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" data-bs-parent="#homeFaq"><div class="accordion-body text-muted" data-i18n="home.faq.{{ loop.index }}.a">{{ a }}</div></div></div>{% endfor %}</div>
+</div>
+</section>
+
+<section class="section-pad" id="contact">
+<div class="container">
+  <div class="section-heading reveal"><span class="eyebrow"><span data-i18n="home.contact_eyebrow">07 · Contact</span></span><h2><span data-i18n="home.contact_title_prefix">Let's talk about what you're</span> <em data-i18n="home.contact_title_em">looking for.</em></h2><p><span data-i18n="home.contact_text">Ask about nutrition, wellness guidance or product information.</span></p></div>
+  <div class="row g-4 align-items-start">
+    <div class="col-lg-5 reveal"><div class="contact-card"><h3><span data-i18n="home.connect">Connect with Madina</span></h3><p><span data-i18n="home.contact_card">For online guidance across India, send an enquiry or start a WhatsApp conversation.</span></p><div class="d-flex flex-wrap gap-2 mt-4"><a class="btn btn-dark-green" href="https://wa.me/{{ site.whatsapp }}?text=Hi%20Madina%2C%20I%20would%20like%20to%20know%20more%20about%20nutrition%20and%20wellness%20guidance." target="_blank" rel="noopener"><span data-i18n="footer.whatsapp">WhatsApp</span></a><a class="btn btn-soft" href="mailto:"><span data-i18n="common.email">Email</span></a></div><div class="info-grid mt-4"><div><strong data-i18n="home.location">Location</strong><span>Siwan, Bihar, India</span></div><div><strong data-i18n="home.availability">Availability</strong><span data-i18n="home.online">Online Across India</span></div></div></div></div>
+    <div class="col-lg-7 reveal"><div class="form-card">
+      {% if success %}<div class="alert alert-success">{{ success }}</div>{% endif %}{% if error %}<div class="alert alert-danger">{{ error }}</div>{% endif %}
+      <form method="post" action="{{ url_for('contact') }}" onsubmit="this.querySelector('button[type=submit]').disabled=true">
+        <div class="row g-3"><div class="col-md-6"><label for="home-name"><span data-i18n="common.name">Name</span></label><input id="home-name" class="form-control" name="name" required maxlength="120"></div><div class="col-md-6"><label for="home-phone"><span data-i18n="common.phone">Phone</span></label><input id="home-phone" class="form-control" name="phone" required maxlength="40"></div><div class="col-md-6"><label for="home-email"><span data-i18n="common.email">Email</span></label><input id="home-email" type="email" class="form-control" name="email" maxlength="160"></div><div class="col-md-6"><label for="home-product"><span data-i18n="common.product_interest">Product of interest</span></label><select id="home-product" class="form-select" name="product"><option value="" data-i18n="common.general_enquiry">General enquiry</option>{% for p in all_products %}<option value="{{ p.name }}">{{ p.name }}</option>{% endfor %}</select></div><div class="col-12"><label for="home-message"><span data-i18n="common.message">Message</span></label><textarea id="home-message" class="form-control" name="message" rows="5" required maxlength="3000"></textarea></div><div class="col-12"><button class="btn btn-dark-green" type="submit"><span data-i18n="common.send_enquiry">Send Enquiry</span></button></div></div>
+      </form>
+    </div></div>
+  </div>
+</div>
+</section>
+
+<section class="cta-strip"><div class="container text-center"><span class="eyebrow"><span data-i18n="home.one_last">One last thing</span></span><h2><span data-i18n="home.cta_title">Wellness information should feel approachable.</span></h2><p><span data-i18n="home.cta_text">Explore the guides, browse product information, or get in touch with Madina.</span></p><a class="btn btn-light-green" href="#home"><span data-i18n="home.back_home">Back to Home</span></a></div></section>
+{% endblock %}

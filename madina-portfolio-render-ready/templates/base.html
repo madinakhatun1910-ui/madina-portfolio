@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="x-hinglish">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>
+      {{ title or "Madina Khatoon — Nutrition & Wellness Guidance" }}
+    </title>
+    <meta
+      name="description"
+      content="{{ description or 'Madina Khatoon — Herbalife Independent Associate offering personal nutrition and wellness guidance from Siwan, Bihar, with online guidance across India.' }}"
+    />
+    <meta name="theme-color" content="#1f4d3a" />
+    <meta
+      property="og:title"
+      content="{{ title or 'Madina Khatoon — Nutrition & Wellness Guidance' }}"
+    />
+    <meta
+      property="og:description"
+      content="{{ description or 'Personal nutrition and wellness guidance by Madina Khatoon.' }}"
+    />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-lg">
+        <div class="container py-2">
+          <a class="brand" href="{{ url_for('index') }}"
+            ><span class="brand-mark">M</span
+            ><span>Madina <strong>Khatoon</strong></span></a
+          >
+          <button
+            class="navbar-toggler border-0"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#nav"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="nav">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+              <li>
+                <a class="nav-link nav-home" href="{{ url_for('index') }}" data-i18n="nav.home">Home</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="{{ url_for('index') }}#about" data-i18n="nav.about">About</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="{{ url_for('index') }}#expertise" data-i18n="nav.expertise">Expertise</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="{{ url_for('index') }}#products" data-i18n="nav.products">Products</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="{{ url_for('index') }}#wellness"
+                   data-i18n="footer.wellness">Wellness</a
+                >
+              </li>
+              <li>
+                <a class="nav-link" href="{{ url_for('index') }}#blog" data-i18n="nav.blog">Blog</a>
+              </li>
+              <li>
+                <a class="nav-link" href="{{ url_for('index') }}#faq" data-i18n="nav.faq">FAQ</a>
+              </li>
+              <li>
+                <a class="btn btn-dark-green nav-cta" href="{{ url_for('index') }}#contact" data-i18n="nav.contact">Contact</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>{% block content %}{% endblock %}</main>
+
+    <footer class="footer mt-5">
+      <div class="container py-5">
+        <div class="row g-4">
+          <div class="col-lg-5">
+            <div class="brand footer-brand">
+              <span class="brand-mark">M</span
+              ><span>Madina <strong>Khatoon</strong></span>
+            </div>
+            <p class="mt-3 footer-muted" data-i18n="footer.role">Herbalife Independent Associate<br />Nutrition & Wellness Guidance
+            </p>
+            <p class="small footer-muted" data-i18n="footer.location">Siwan, Bihar, India · Online Guidance Across India
+            </p>
+          </div>
+          <div class="col-6 col-lg-2">
+            <h6 data-i18n="footer.explore">Explore</h6>
+            <a href="{{ url_for('index') }}" data-i18n="footer.home">Home</a
+            ><a href="{{ url_for('about') }}" data-i18n="footer.about">About</a
+            ><a href="{{ url_for('product_list') }}" data-i18n="footer.products">Products</a
+            ><a href="{{ url_for('wellness') }}" data-i18n="nav.wellness" data-i18n="nav.wellness">Wellness</a>
+          </div>
+          <div class="col-6 col-lg-2">
+            <h6 data-i18n="footer.knowledge">Knowledge</h6>
+            <a href="{{ url_for('blog') }}" data-i18n="footer.knowledge">Blog</a
+            ><a href="{{ url_for('faq') }}" data-i18n="nav.faq">FAQ</a
+            ><a href="{{ url_for('disclaimer') }}" data-i18n="footer.disclaimer">Disclaimer</a
+            ><a href="{{ url_for('privacy') }}" data-i18n="footer.privacy">Privacy</a>
+          </div>
+          <div class="col-lg-3">
+            <h6 data-i18n="footer.connect">Connect</h6>
+            <div class="socials">
+              {% if site.socials.instagram %}<a
+                href="{{ site.socials.instagram }}"
+                target="_blank"
+                rel="noopener"
+                 data-i18n="footer.instagram" data-i18n="footer.instagram">Instagram</a
+              >{% endif %} {% if site.socials.youtube %}<a
+                href="{{ site.socials.youtube }}"
+                target="_blank"
+                rel="noopener"
+                 data-i18n="footer.youtube">YouTube</a
+              >{% endif %} {% if site.socials.linkedin %}<a
+                href="{{ site.socials.linkedin }}"
+                target="_blank"
+                rel="noopener"
+                 data-i18n="footer.linkedin">LinkedIn</a
+              >{% endif %}
+              <a
+                href="https://wa.me/{{ site.whatsapp }}"
+                target="_blank"
+                rel="noopener"
+                 data-i18n="footer.whatsapp">WhatsApp</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom mt-4 pt-4">
+          © {{ 2026 }} Madina Khatoon. <span data-i18n="footer.site_note">Personal wellness information website.</span>
+        </div>
+      </div>
+    </footer>
+    <a
+      class="floating-wa"
+      href="https://wa.me/{{ site.whatsapp }}?text=Hi%20Madina%2C%20I%20would%20like%20to%20know%20more%20about%20nutrition%20and%20wellness%20guidance."
+      target="_blank"
+      rel="noopener"
+      aria-label="Chat on WhatsApp"
+      >WA</a
+    >
+    <div class="language-switcher" style="position:fixed;right:18px;bottom:86px;z-index:9999;background:#fff;padding:8px 10px;border:1px solid #ddd;border-radius:12px;box-shadow:0 4px 16px #0002">
+      <label for="site-language" style="font-size:12px;margin-right:6px;color:#222" data-i18n="language.label">Language</label>
+      <select id="site-language" aria-label="Choose language" data-i18n-aria-label="language.choose" style="border:0;background:transparent;color:#222;font-weight:600">
+        <option value="x-hinglish" data-i18n="language.hinglish">Hinglish (Original)</option>
+        <option value="en" data-i18n="language.english">English</option>
+        <option value="hi" data-i18n="language.hindi">Hindi (हिन्दी)</option>
+      </select>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  </body>
+</html>

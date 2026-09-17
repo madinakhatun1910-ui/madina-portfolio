@@ -1,0 +1,15 @@
+<div class="product-card" data-product-id="{{ p.id }}">
+  <a class="product-image" href="{{ url_for('product_detail', slug=p.id) }}">
+    {% if p.image %}<img class="i18n-product-name" src="{{ url_for('static', filename=p.image.replace('static/','')) }}" alt="{{ p.name }}" data-i18n-alt="product.{{ p.id }}.name" loading="lazy">{% else %}<span class="i18n-product-name">{{ p.name[:2]|upper }}</span>{% endif %}
+  </a>
+  <div class="product-body">
+    <span class="tag" data-i18n="product.{{ p.id }}.category">{{ p.category or "Product information" }}</span>
+    <h3 data-i18n="product.{{ p.id }}.name">{{ p.name }}</h3>
+    {% if p.short_description %}<p data-i18n="product.{{ p.id }}.short_description">{{ p.short_description }}</p>{% endif %}
+    <div class="product-meta">
+      {% if p.net_quantity %}<span>{{ p.net_quantity }}</span>{% endif %}
+      {% if p.sku %}<span><span data-i18n="common.sku">SKU</span> {{ p.sku }}</span>{% endif %}
+    </div>
+    <div class="d-flex gap-2 mt-3"><a class="btn btn-sm btn-outline-green" href="{{ url_for('product_detail', slug=p.id) }}"><span data-i18n="common.view_details">View Details</span></a><a class="btn btn-sm btn-soft" target="_blank" rel="noopener" href="https://wa.me/{{ site.whatsapp }}?text=Hi%20Madina%2C%20I%20would%20like%20to%20know%20more%20about%20{{ p.name|urlencode }}."><span data-i18n="common.ask_product">Ask About This Product</span></a></div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block content %}
+<section class="page-hero"><div class="container"><span class="eyebrow"><span data-i18n="faq.eyebrow">FAQ</span></span><h1><span data-i18n="faq.title">Frequently asked questions.</span></h1><p><span data-i18n="faq.subtitle">Quick answers about Madina's work, guidance and product information.</span></p></div></section>
+<section class="section-pad"><div class="container narrow"><div class="accordion" id="mainFaq">
+{% for q,a in [
+("Who is Madina Khatoon?","Madina Khatoon is a Herbalife Independent Associate focused on Nutrition & Wellness Guidance, based in Siwan, Bihar, with online guidance available across India."),
+("What kind of guidance does Madina provide?","General educational guidance around nutrition, wellness habits and product information. The website does not provide medical diagnosis or treatment."),
+("Can I ask about a Herbalife product?","Yes. The Products section presents information from the supplied Product FAQs document. You can use the product enquiry option to ask Madina about a product."),
+("Can I purchase products through this website?","No. This is a personal portfolio and information website. It has no shopping cart, pricing, checkout or online payment."),
+("How can I contact Madina?","Use the Contact page or WhatsApp button. Contact enquiries submitted through the website are stored in a simple SQLite database."),
+("Can product information change?","Yes. Product information may change, so users should check the current product label and company documentation."),
+("Is the wellness content medical advice?","No. The content is general educational information and is not intended to diagnose, treat, cure or prevent disease.")
+] %}<div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#faq{{ loop.index }}" data-i18n="faq.item.{{ loop.index }}.q">{{ q }}</button></h2><div id="faq{{ loop.index }}" class="accordion-collapse collapse"><div class="accordion-body" data-i18n="faq.item.{{ loop.index }}.a">{{ a }}</div></div></div>{% endfor %}
+</div></div></section>
+{% endblock %}

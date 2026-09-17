@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block content %}
+<section class="page-hero"><div class="container"><span class="eyebrow"><span data-i18n="products.eyebrow">Product knowledge</span></span><h1><span data-i18n="products.title">Products, explained clearly.</span></h1><p><span data-i18n="products.subtitle">Information and guidance only — no prices, purchasing or checkout.</span></p></div></section>
+<section class="section-pad"><div class="container">
+<div class="filter-bar"><input id="productSearch" class="form-control" placeholder="Search products..." aria-label="Search products" data-i18n-placeholder="common.search_products"><select id="categoryFilter" class="form-select"><option value="" data-i18n="common.all_categories">All categories</option>{% for c in categories %}<option>{{ c }}</option>{% endfor %}</select></div>
+<div id="productGrid" class="row g-4 mt-2">{% for p in products %}<div class="col-md-6 col-lg-4 product-item reveal" data-name="{{ p.name|lower }}" data-category="{{ p.category }}"><div>{% include "_product_card.html" %}</div></div>{% endfor %}</div>
+<div id="noProducts" class="empty-state d-none"><span data-i18n="common.no_products">No products match your search.</span></div>
+</div></section>{% endblock %}

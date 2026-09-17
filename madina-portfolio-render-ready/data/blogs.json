@@ -1,0 +1,40 @@
+{
+  "posts": [
+    {
+      "id": "understanding-protein",
+      "title": "Understanding Protein",
+      "slug": "understanding-protein",
+      "category": "Nutrition",
+      "excerpt": "Protein is one part of a balanced diet. Learn the basics in simple language.",
+      "content": "Protein is an essential nutrient used by the body for many functions. Everyday food sources can include pulses, dairy, eggs, fish, soy and other foods. The amount a person needs varies with factors such as age, body size and activity. This article is general education, not an individual nutrition plan.",
+      "image": "",
+      "date": "2026-09-17",
+      "author": "Madina Khatoon",
+      "sources": []
+    },
+    {
+      "id": "hydration-basics",
+      "title": "Hydration Basics",
+      "slug": "hydration-basics",
+      "category": "Wellness",
+      "excerpt": "A simple guide to making hydration part of an everyday routine.",
+      "content": "Hydration is part of everyday wellness. Water and other suitable fluids contribute to normal body functions. Needs can vary with weather, activity and individual circumstances. People with medical conditions or fluid restrictions should follow advice from their healthcare professional.",
+      "image": "",
+      "date": "2026-09-17",
+      "author": "Madina Khatoon",
+      "sources": []
+    },
+    {
+      "id": "fibre-in-everyday-food",
+      "title": "Fibre in Everyday Food",
+      "slug": "fibre-in-everyday-food",
+      "category": "Nutrition",
+      "excerpt": "Understand soluble and insoluble fibre and where they commonly appear in food.",
+      "content": "Dietary fibre is found in plant foods. Soluble and insoluble fibre behave differently in the digestive system. Common food sources include fruits, vegetables, beans, lentils and whole grains. Gradually building a varied diet can be a practical way to include fibre. This is general educational information.",
+      "image": "",
+      "date": "2026-09-17",
+      "author": "Madina Khatoon",
+      "sources": []
+    }
+  ]
+}

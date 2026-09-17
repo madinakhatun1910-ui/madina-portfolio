@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block content %}
+<section class="page-hero"><div class="container"><span class="eyebrow"><span data-i18n="wellness.eyebrow">Wellness Guide</span></span><h1><span data-i18n="wellness.title">Everyday wellness, one topic at a time.</span></h1><p><span data-i18n="wellness.subtitle">General educational information — not diagnosis or treatment.</span></p></div></section>
+<section class="section-pad"><div class="container"><div class="row g-4">
+{% for title, text in [
+("Nutrition","Learn the basics of balanced eating, food variety and everyday nutrition awareness."),
+("Protein","Understand what protein is, common food sources and why it is part of a varied diet."),
+("Fibre","Explore soluble and insoluble fibre and practical food sources."),
+("Hydration","Understand the role of fluids in everyday routines and why needs can vary."),
+("Vitamins & Minerals","A simple introduction to micronutrients and the role of a varied diet."),
+("Fitness","Explore movement as part of a balanced lifestyle, at a level that suits the individual."),
+("Sleep","Learn about sleep habits, routines and the many factors that can influence sleep quality."),
+("Healthy Lifestyle","Bring food, movement, hydration, rest and sustainable habits together.")]
+%}<div class="col-md-6 col-lg-3 reveal"><article class="guide-card"><div class="guide-number">{{ loop.index }}</div><h3 data-i18n="wellness_topic.{{ loop.index }}.title">{{ title }}</h3><p data-i18n="wellness_topic.{{ loop.index }}.text">{{ text }}</p></article></div>{% endfor %}
+</div><div class="notice mt-5"><strong><strong data-i18n="wellness.note">Educational note:</strong></strong> <span data-i18n="wellness.note_text">These topics are for general awareness. For medical conditions, medications, pregnancy, breastfeeding, dietary restrictions or individual treatment decisions, consult a qualified healthcare professional.</span></div></div></section>
+{% endblock %}
